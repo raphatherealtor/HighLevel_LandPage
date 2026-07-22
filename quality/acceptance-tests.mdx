@@ -9,6 +9,10 @@ description: "Evidence required before Phase 1 can launch"
 - Deliverable and follow-up expectations are explicit.
 - Unsupported properties never receive fabricated values.
 - Low confidence is visible.
+- The public result uses only facts a consumer could obtain publicly.
+- Private-input controls remain unavailable until the visitor affirms personal ownership.
+- Declining ownership attestation leaves the public experience usable and stores no non-public property facts.
+- Every displayed and transmitted input is labeled public source, user-provided, or calculated.
 
 ## Calculation
 
@@ -37,6 +41,8 @@ description: "Evidence required before Phase 1 can launch"
 - Sensitive fields and logs are minimized.
 - Preview and production are separate.
 - HomeTwin data is never queried.
+- Private MLS fields, non-public loan or distress data, CRM history, and third-party behavioral profiles are never queried for the result.
+- Tests confirm that a provider response containing an ineligible private field is filtered server-side and never reaches browser output, logs, analytics, reports, or CRM.
 
 ## Abuse, cost, and performance
 
@@ -54,8 +60,8 @@ description: "Evidence required before Phase 1 can launch"
 |---|---|---|
 | Product specification | Rapha | Open |
 | Visual direction | Rapha | Open |
-| Data permission | Rapha/provider | Blocked |
-| CRM field map | Rapha/integration test | Blocked |
+| Data permission | Rapha/provider | Provisionally cleared for public-display interface work; exact field, attribution, caching, retention, and derivative rules open |
+| CRM field map | Rapha/integration test | First Figgy delivery passed; structured verification open |
 | Privacy policy | Rapha + designated reviewer | Blocked |
 | Abuse/spend configuration | Rapha + implementation review | Blocked |
 | Implementation review | Codex | Not started |

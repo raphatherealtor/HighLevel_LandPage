@@ -16,12 +16,15 @@ description: "Approved product, architecture, workflow, and boundary decisions"
 | 2026-07-22 | Use one active implementation editor per branch | Approved |
 | 2026-07-22 | Require abuse prevention, provider-spend caps, and contract-dependent caching before public lookup traffic | Approved specification requirement |
 | 2026-07-22 | Keep calculations in one framework-independent tested module | Approved specification requirement |
+| 2026-07-22 | Treat REcore/CRMLS public-display permission as provisionally confirmed, subject to licensed-name, DRE-number, brokerage, attribution, and other applicable real-estate advertising disclosures | Provisionally approved from written provider response |
+| 2026-07-22 | Use Figgy as the leading BoldTrail ingestion route after a successful test-contact delivery; retain structured retry, duplicate, field, and consent verification before external preview | Approved direction; verification incomplete |
+| 2026-07-22 | Restrict provider-derived property data to information publicly obtainable by a consumer; accept non-public property information only when knowingly supplied by a user about property they personally own | Approved hard boundary |
 
 ## Proposed technical direction
 
 - Use Vercel rather than Vercel plus Netlify.
 - Let Lovable create the app repository if it generates v1.
 - Use Supabase Edge Functions in the Lovable-native pattern.
-- Select Figgy or direct API after a structured ingestion test.
+- Prefer Figgy for the first implementation slice if its structured verification passes. Keep the direct API as a documented fallback rather than adding it merely for redundancy.
 
 Add a dated entry whenever scope, calculations, providers, architecture, consent, or launch behavior changes. Never rewrite a proposal to appear previously approved.
