@@ -1,0 +1,38 @@
+---
+title: "Data and integrations"
+description: "Provider boundaries, CRM routes, payloads, and technical decisions"
+---
+
+## Production pattern
+
+**Lovable-native:** Lovable React app in its own generated GitHub repository, Vercel previews/hosting, Supabase Edge Functions for authenticated provider calls, optional Supabase persistence, and Figgy/API into BoldTrail.
+
+**Repository-native:** Existing supported app framework, Vercel hosting/functions, optional Supabase database, and Codex implementation from the frozen spec.
+
+Do not use Vercel Functions and Supabase Edge Functions for the same initial integration duties.
+
+## Property data
+
+**Blocked:** provider and rights are unconfirmed. Document provider, fields, display/caching/derivative rights, AI restrictions, attribution, limits, costs, confidence, and failure behavior.
+
+## BoldTrail candidates
+
+Rapha identified Figgy lead/contact push, lead-ingestion email, API access, and Smart Campaign webhook actions after a contact exists. Select the route that preserves structured fields, source, consent, idempotency, retries, and errors.
+
+## Minimum lead payload
+
+| Field | Requirement |
+|---|---|
+| Name/email/phone | Open; delivery-dependent |
+| Property address | Required for the requested brief |
+| Source | `instant_value_equity` |
+| Requested deliverable | Required |
+| Submitted corrections | Include when disclosed |
+| Mortgage balance | Only when knowingly submitted and needed |
+| Contact preference | Required for follow-up |
+| Consent version and time | Required |
+| Idempotency key | Required |
+
+## Secrets and persistence
+
+Keep credentials in the selected server-side function environment, never browser code or Git. Keep preview and production separate. Add Supabase tables only for an approved purpose such as consent receipts, a minimal delivery ledger, saved reports, or later dashboards. BoldTrail remains the CRM system of record.

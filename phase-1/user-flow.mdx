@@ -1,0 +1,27 @@
+---
+title: "User flow and states"
+description: "The path from address entry to result and optional follow-up"
+---
+
+<Steps>
+  <Step title="Enter address">Normalize and confirm the property without requesting contact information.</Step>
+  <Step title="Confirm property facts">Show permitted facts and let the visitor correct supported fields.</Step>
+  <Step title="Show preliminary result">Present a value range, source date, confidence, and influential factors.</Step>
+  <Step title="Refine voluntarily">Offer optional condition or renovation corrections and show what changed.</Step>
+  <Step title="Estimate equity and proceeds">Ask for mortgage balance only when equity analysis opens. Label it user-provided and optional.</Step>
+  <Step title="Request deeper analysis">State the deliverable, fields, delivery channel, transmitted information, and follow-up expectation.</Step>
+  <Step title="Confirm delivery">Show what was requested, how it arrives, and how to correct or stop follow-up.</Step>
+</Steps>
+
+## Required states
+
+- **Loading:** honest progress, timeout, and recovery.
+- **Partial data:** identify missing facts and allow corrections.
+- **Low confidence:** explain the broad range and offer review.
+- **Unsupported property:** never fabricate a result.
+- **Provider failure:** retry safely; do not create a lead without an intentional request.
+- **Duplicate:** confirm the existing request instead of creating repeated contacts or messages.
+
+## Mobile requirements
+
+Use one primary action per viewport, large controls, visible assumptions, collapsible scenario details, keyboard-safe inputs, and visible focus. Avoid precision dragging or wide financial tables.

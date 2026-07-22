@@ -1,0 +1,47 @@
+---
+title: "Acceptance tests"
+description: "Evidence required before Phase 1 can launch"
+---
+
+## Product
+
+- Preliminary results provide value before capture.
+- Deliverable and follow-up expectations are explicit.
+- Unsupported properties never receive fabricated values.
+- Low confidence is visible.
+
+## Calculation
+
+- Every formula has unit tests and manually reviewed golden examples.
+- Both range bounds, negative equity, missing payoff, and editable assumptions behave correctly.
+- No LLM generates authoritative numbers.
+
+## Integration
+
+- Provider responses match the documented contract.
+- Secrets are absent from browser bundles and history.
+- One request creates one CRM contact/update.
+- Repeated submissions are idempotent.
+- Failures are observable and recoverable.
+- Consent and source attribution survive ingestion.
+
+## Experience and safety
+
+- Desktop/mobile match approved references.
+- Keyboard and screen-reader smoke tests pass.
+- Loading corresponds to real work.
+- Sensitive fields and logs are minimized.
+- Preview and production are separate.
+- HomeTwin data is never queried.
+
+## Approval record
+
+| Gate | Owner | Status |
+|---|---|---|
+| Product specification | Rapha | Open |
+| Visual direction | Rapha | Open |
+| Data permission | Rapha/provider | Blocked |
+| CRM field map | Rapha/integration test | Blocked |
+| Implementation review | Codex | Not started |
+| Independent review | Claude | Not started |
+| Launch | Rapha | Not started |
