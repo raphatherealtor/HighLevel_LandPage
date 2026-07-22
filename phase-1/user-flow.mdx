@@ -8,7 +8,7 @@ description: "The path from address entry to result and optional follow-up"
   <Step title="Confirm property facts">Show permitted facts and let the visitor correct supported fields.</Step>
   <Step title="Show preliminary result">Present a value range, source date, confidence, and influential factors.</Step>
   <Step title="Refine voluntarily">Offer optional condition or renovation corrections and show what changed.</Step>
-  <Step title="Estimate equity and proceeds">Ask for mortgage balance only when equity analysis opens. Label it user-provided and optional.</Step>
+  <Step title="Estimate equity and proceeds">Ask for mortgage balance only when equity analysis opens. Label it user-provided and optional. Provide **I don't know my payoff** and allow either skipping equity or entering an explicitly approximate balance/range.</Step>
   <Step title="Request deeper analysis">State the deliverable, fields, delivery channel, transmitted information, and follow-up expectation.</Step>
   <Step title="Confirm delivery">Show what was requested, how it arrives, and how to correct or stop follow-up.</Step>
 </Steps>
@@ -20,7 +20,8 @@ description: "The path from address entry to result and optional follow-up"
 - **Low confidence:** explain the broad range and offer review.
 - **Unsupported property:** never fabricate a result.
 - **Provider failure:** retry safely; do not create a lead without an intentional request.
-- **Duplicate:** confirm the existing request instead of creating repeated contacts or messages.
+- **Duplicate:** apply the [15-minute idempotency contract](/phase-1/data-and-integrations#idempotency-contract), return the original receipt, and avoid repeated contacts, campaign enrollment, reports, or messages.
+- **Rate or budget limited:** show the documented high-demand state and manual-review alternative without repeating the paid lookup.
 
 ## Mobile requirements
 

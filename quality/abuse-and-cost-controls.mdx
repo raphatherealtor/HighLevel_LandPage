@@ -1,0 +1,54 @@
+---
+title: "Abuse and cost controls"
+description: "Rate limits, bot defenses, provider caching, budget caps, and graceful degradation"
+---
+
+The public address-lookup endpoint is both expensive and exposed. These controls are required before preview traffic reaches a paid provider.
+
+## Default lookup limits
+
+- Maximum **3 distinct uncached property lookups per anonymous session per 24 hours**.
+- Maximum **10 uncached lookups per IP per hour** and **30 per IP per 24 hours**.
+- Repeated requests for the same normalized address use the permitted cached result and do not consume another paid lookup.
+- Limits are server-side configuration, not browser-only checks.
+- Rapha may change limits after observing legitimate traffic, cost, shared-network false positives, and provider terms.
+
+## Bot mitigation
+
+- Use a hidden honeypot field on the address form.
+- Require a server-verified bot challenge such as Turnstile before a paid provider call. Prefer a managed or invisible interaction when risk is low.
+- Reject malformed, automated, or replayed requests before provider invocation.
+- Apply request-body size limits, schema validation, and timeouts.
+- Never reveal whether an address belongs to a CRM contact or private record.
+
+## Cache-before-provider policy
+
+1. Normalize the address server-side.
+2. Check a provider-specific cache only when the data contract permits caching and the configured TTL has not expired.
+3. Coalesce concurrent requests for the same normalized address so one provider call serves all waiting requests.
+4. Call the provider only after limits, bot verification, and budget checks pass.
+5. Store only the minimum provider response allowed by contract.
+
+<Warning>
+  Caching is conditional, not assumed. If the property-data agreement prohibits caching, disable it and tighten rate and budget limits. Never cache proprietary MLS data without explicit rights and retention rules.
+</Warning>
+
+## Spend containment
+
+- Configure `DAILY_LOOKUP_BUDGET_USD` from the selected provider price and approved launch budget.
+- Alert Rapha at 50% and 80% of the daily budget.
+- Stop new paid lookups at 100% unless Rapha explicitly raises the cap.
+- Track provider calls, cache outcomes, rejected abuse, estimated spend, and cap events without logging unnecessary personal data.
+- Keep preview/staging on a separate low budget or provider sandbox.
+
+The approved budget value is a **Gate 0 blocker**. The implementation must not invent it.
+
+## Cap and limit experience
+
+When the budget or abuse limit blocks a lookup:
+
+- Do not show a generic system error.
+- Explain that instant reports are temporarily limited because of high demand.
+- Offer retry timing when known.
+- Offer a manual-review request through a path that does not invoke the paid lookup again.
+- Do not promise a result until the manual workflow is verified.

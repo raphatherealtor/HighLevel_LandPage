@@ -42,4 +42,15 @@ A homeowner curious about current value, equity, or possible proceeds who wants 
 
 ## Success measures
 
-Measure address-to-result completion, result-to-request conversion, valid delivery, CRM completeness, duplicate rate, qualified conversations, appointments, consumer corrections, and provider failures. Form conversion alone is insufficient.
+Measure address-to-result completion, result-to-request conversion, valid delivery, CRM completeness, duplicate rate, qualified conversations, appointments, consumer corrections, provider failures, cache rate, blocked abuse, and provider spend. Form conversion alone is insufficient.
+
+A **qualified conversation** is a reply or live exchange in which the person's identity and property interest are confirmed and they ask a substantive valuation, equity, proceeds, or decision question, or accept a detailed review. Automated opens, invalid contacts, wrong numbers, and unsubscribe-only replies do not qualify.
+
+## Performance budgets
+
+- Mobile LCP: **2.5 seconds or less at the 75th percentile** on the agreed mobile test profile.
+- Initial compressed transfer: **500 KB or less**, excluding lazy-loaded maps, reports, and third-party challenge assets.
+- Cached property result: **1.5 seconds or less at p75** after address normalization.
+- Uncached provider result: **4 seconds or less at p75**; show honest progress after 800 ms and a recoverable timeout by 10 seconds.
+
+Record performance separately for cached, uncached, partial, and failed responses. Provider behavior may force revision before launch, but no budget may be removed without a dated decision.

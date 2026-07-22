@@ -35,7 +35,19 @@ estimated net proceeds = estimated sale price
                        - other disclosed deductions
 ```
 
-Do not hard-code a universal commission or closing-cost percentage. Use editable assumptions and never present negotiable fees as fixed.
+Calculate net proceeds twice: once from the lower property-value bound and once from the upper bound. Present the result as a range. Never select the central estimate as the only proceeds input.
+
+Do not hard-code a universal commission or closing-cost percentage. Each enabled deduction must start with a labeled, editable, locally approved default and a visible source note with jurisdiction and effective date.
+
+Seed policy:
+
+- The default-assumption set is configuration owned by Rapha, not embedded in UI components.
+- Compensation and other negotiable fees must be labeled negotiable.
+- If no supported local source exists, either require an explicit user estimate or omit that deduction from the preliminary proceeds calculation.
+- The proceeds result lists every included and excluded deduction.
+- Changing any assumption immediately updates both range bounds.
+
+Phase 1 cannot enable net proceeds until the local default set and its sources are approved.
 
 ## Golden cases required
 

@@ -33,6 +33,20 @@ Rapha identified Figgy lead/contact push, lead-ingestion email, API access, and 
 | Consent version and time | Required |
 | Idempotency key | Required |
 
+## Idempotency contract
+
+The browser creates a random request token for each intentional deliverable request and retains it through retries. The server also computes a deduplication fingerprint using an HMAC of normalized property address, normalized delivery destination, requested deliverable, and consent version. Raw personal information must not appear in the stored key.
+
+- Deduplication window: **15 minutes** from the first accepted request.
+- A retry with the same request token returns the original receipt.
+- A matching fingerprint within the window updates or confirms the existing delivery record instead of creating a second CRM contact, campaign enrollment, report, or message.
+- A changed destination, deliverable, or consent version creates a new request.
+- Pass the stable request ID to Figgy/BoldTrail/API as an external reference when supported.
+
 ## Secrets and persistence
 
 Keep credentials in the selected server-side function environment, never browser code or Git. Keep preview and production separate. Add Supabase tables only for an approved purpose such as consent receipts, a minimal delivery ledger, saved reports, or later dashboards. BoldTrail remains the CRM system of record.
+
+## Reusable calculation boundary
+
+All financial calculations must live in a pure, framework-independent TypeScript module with no React, browser, database, provider, or UI imports. UI and server endpoints call the same tested functions. The implementation review must reject duplicated formulas or component-owned financial logic.

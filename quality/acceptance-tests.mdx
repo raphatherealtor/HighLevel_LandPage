@@ -14,7 +14,10 @@ description: "Evidence required before Phase 1 can launch"
 
 - Every formula has unit tests and manually reviewed golden examples.
 - Both range bounds, negative equity, missing payoff, and editable assumptions behave correctly.
+- Net proceeds are calculated from both value bounds and presented as a range.
+- Every seeded deduction has an approved value, source, jurisdiction, effective date, and editable label.
 - No LLM generates authoritative numbers.
+- Financial calculations live in one pure framework-free module with no UI or provider imports; UI and server tests use the same module.
 
 ## Integration
 
@@ -22,6 +25,7 @@ description: "Evidence required before Phase 1 can launch"
 - Secrets are absent from browser bundles and history.
 - One request creates one CRM contact/update.
 - Repeated submissions are idempotent.
+- The request token, HMAC fingerprint, 15-minute window, and duplicate receipt behavior match the documented contract.
 - Failures are observable and recoverable.
 - Consent and source attribution survive ingestion.
 
@@ -34,6 +38,16 @@ description: "Evidence required before Phase 1 can launch"
 - Preview and production are separate.
 - HomeTwin data is never queried.
 
+## Abuse, cost, and performance
+
+- Per-session and per-IP limits are enforced server-side.
+- Honeypot and server-verified bot challenge run before a paid lookup.
+- Concurrent identical lookups coalesce.
+- Cache behavior and TTL match the provider contract; caching is disabled when prohibited.
+- Spend alerts fire at 50% and 80%, and paid lookups stop at the configured daily cap.
+- The cap state provides the documented graceful alternative.
+- Mobile LCP, initial transfer, cached latency, and uncached latency meet the Phase 1 budgets in a preview environment.
+
 ## Approval record
 
 | Gate | Owner | Status |
@@ -42,6 +56,8 @@ description: "Evidence required before Phase 1 can launch"
 | Visual direction | Rapha | Open |
 | Data permission | Rapha/provider | Blocked |
 | CRM field map | Rapha/integration test | Blocked |
+| Privacy policy | Rapha + designated reviewer | Blocked |
+| Abuse/spend configuration | Rapha + implementation review | Blocked |
 | Implementation review | Codex | Not started |
 | Independent review | Claude | Not started |
 | Launch | Rapha | Not started |

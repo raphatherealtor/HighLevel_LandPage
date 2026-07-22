@@ -24,7 +24,7 @@
       },
       {
         "group": "Quality and governance",
-        "pages": ["quality/acceptance-tests", "quality/launch-checklist", "governance/decision-log", "governance/open-questions"]
+        "pages": ["quality/abuse-and-cost-controls", "quality/acceptance-tests", "quality/launch-checklist", "governance/decision-log", "governance/open-questions"]
       }
     ]
   },
@@ -36,7 +36,7 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/raphatherealtor/highlevel_landpage"
+        "href": "https://github.com/raphatherealtor/HighLevel_LandPage"
       }
     ],
     "primary": {
@@ -59,7 +59,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/raphatherealtor/highlevel_landpage"
+      "github": "https://github.com/raphatherealtor/HighLevel_LandPage"
     }
   }
 }
