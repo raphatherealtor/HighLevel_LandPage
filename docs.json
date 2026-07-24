@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Homeowner Decision Micro-Apps",
   "colors": {
-    "primary": "#0F766E",
-    "light": "#14B8A6",
-    "dark": "#134E4A"
+    "primary": "#5A8CFF",
+    "light": "#27C9C3",
+    "dark": "#071523"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -20,7 +20,7 @@
       },
       {
         "group": "Experience",
-        "pages": ["experience/design-system"]
+        "pages": ["experience/design-system", "experience/full-flow-audit"]
       },
       {
         "group": "Quality and governance",
