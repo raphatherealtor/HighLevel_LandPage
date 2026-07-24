@@ -1,0 +1,60 @@
+---
+title: "Calculation dictionary"
+description: "Formulas, assumptions, ranges, and unresolved calculation policy"
+---
+
+## Rules
+
+- Keep calculations deterministic and testable.
+- Record source dates and user assumptions.
+- Never let an LLM produce authoritative financial numbers.
+- Present ranges when inputs or evidence are uncertain.
+- Keep display rounding separate from stored precision.
+
+## Preliminary value contract
+
+The provider and permitted method remain **open**. The response must include lower estimate, optional central estimate, upper estimate, confidence/evidence tier, effective date, displayable sources, and assumptions.
+
+## Estimated equity
+
+```text
+estimated equity = estimated property value - user-entered secured debt balance
+```
+
+Apply the debt balance to both range bounds.
+
+<Warning>Equity is not available cash. It excludes sale costs, unentered liens, taxes, payoff changes, and lender requirements.</Warning>
+
+## Estimated net proceeds
+
+```text
+estimated net proceeds = estimated sale price
+                       - mortgage and entered liens
+                       - estimated selling costs
+                       - entered repairs or concessions
+                       - other disclosed deductions
+```
+
+Calculate net proceeds twice: once from the lower property-value bound and once from the upper bound. Present the result as a range. Never select the central estimate as the only proceeds input.
+
+Do not hard-code a universal commission or closing-cost percentage. Each enabled deduction must start with a labeled, editable, locally approved default and a visible source note with jurisdiction and effective date.
+
+Seed policy:
+
+- The default-assumption set is configuration owned by Rapha, not embedded in UI components.
+- Compensation and other negotiable fees must be labeled negotiable.
+- If no supported local source exists, either require an explicit user estimate or omit that deduction from the preliminary proceeds calculation.
+- The proceeds result lists every included and excluded deduction.
+- Changing any assumption immediately updates both range bounds.
+
+Phase 1 cannot enable net proceeds until the local default set and its sources are approved.
+
+## Golden cases required
+
+- No mortgage
+- Mortgage below the low estimate
+- Mortgage inside the value range
+- Negative estimated equity
+- Missing payoff
+- Editable selling-cost assumptions
+- Invalid and extreme inputs

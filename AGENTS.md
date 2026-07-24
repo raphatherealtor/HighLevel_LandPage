@@ -1,33 +1,32 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
-
-# Documentation project instructions
+# Specification-hub instructions
 
 ## About this project
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
+- This is Rapha's living product and build specification for homeowner decision micro-apps.
+- It is a Mintlify documentation site using MDX pages and `docs.json` configuration.
+- Keep production application code in a separate repository.
+- Never add credentials, environment values, or real consumer/provider payloads.
+- Mark unresolved claims and integrations instead of silently deciding them.
 
 ## Terminology
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+- Use **preliminary value range**, not exact valuation.
+- Use **Homeowner Options Navigator**, not distress funnel.
+- Use **Instant Value and Equity** for Phase 1.
+- Use **Private Sale Path**, not secret-listing program.
+- Distinguish **submitted lead context** from undisclosed profiling.
 
-## Style preferences
+## Style
 
-{/* Add any project-specific style rules below */}
+- Use active voice and second person.
+- Keep sentences concise and use sentence-case headings.
+- Label status as approved, proposed, blocked, open, or not started.
+- Keep formulas separate from interface copy.
+- Document failure and low-confidence states.
 
-- Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
-- Use sentence case for headings
-- Bold for UI elements: Click **Settings**
-- Code formatting for file names, commands, paths, and code references
+## Boundaries
 
-## Content boundaries
-
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Do not publish keys, tokens, real consumer data, or proprietary MLS samples.
+- Do not claim verification without a dated test and evidence.
+- Do not route HomeTwin behavior into CRM-X.
+- Do not describe lender-specific eligibility as an algorithmic determination.

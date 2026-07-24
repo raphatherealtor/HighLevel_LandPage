@@ -1,0 +1,77 @@
+---
+title: "Approved flow audit"
+description: "Continuity, usability, accessibility, and implementation findings across the approved Phase 1 journey"
+---
+
+## Overall verdict
+
+The approved direction is coherent, distinctive, and ready to become a production specification after the corrections below. The strongest through-line is the transformation from public property portrait to private homeowner decision report.
+
+The reference images are visual targets, not literal production copy or data. Production must use the corrected interaction rules in this audit whenever a mock conflicts with the written specification.
+
+## 1. Address entry — healthy with one copy correction
+
+![Address entry](/assets/flow-audit/01-address-entry.png)
+
+The single address field, public-data promise, and no-contact reassurance create a clear low-friction start. Replace the poetic button label **Begin the portrait** with the more explicit **See my preliminary range**. Preserve “property portrait” as supporting brand language, not the action label.
+
+## 2. Preliminary public result — healthy
+
+![Preliminary public result](/assets/flow-audit/02-public-result.png)
+
+The result gives value before capture and clearly labels public facts, range width, confidence, source date, and non-appraisal status. Production must explain why a range is broad and must never hide a low-confidence or partial-data state behind decorative animation.
+
+## 3. Public/private explanation — healthy as a transition, not a second form
+
+![Public and private explanation](/assets/flow-audit/03-ownership-explanation.png)
+
+The visual boundary between public evidence and owner knowledge is effective. To avoid repeated confirmation, this state explains the choice but does not collect the ownership representation. The actual confirmation control appears once in Step 4.
+
+## 4. Ownership confirmation — healthy after deduplication
+
+![Ownership confirmation](/assets/flow-audit/04-ownership-confirmation.png)
+
+This is the single authoritative ownership-confirmation step. The control must remain unchecked. The adjacent copy must state that the visitor is making a representation and that the application is not independently verifying title. **Keep public result only** remains fully available.
+
+## 5. Four-chapter refinement — healthy with a corrected calculation label
+
+![Guided refinement](/assets/flow-audit/05-guided-refinement.png)
+
+One chapter at a time keeps the private experience manageable. Correct the mock's sidebar description of improvements: supported improvements may refine the value range. Mortgage payoff and selling costs affect equity and proceeds, not home value. Every chapter is skippable and every field accepts **I don't know**.
+
+## 6. Private Decision Sheet — revise before implementation
+
+![Private Decision Sheet](/assets/flow-audit/06-decision-sheet.png)
+
+The consolidated provenance table is the right review surface. Remove the mock's **Required** status from home condition; private refinements are optional. Missing inputs leave the relevant result unchanged or unavailable with a plain explanation. They never block access to already available public results.
+
+Use the effective date of each public source or assumption. Do not copy dates or figures from the mock.
+
+## 7. Private Portfolio delivery — healthy with one control removed
+
+![Private Portfolio delivery](/assets/flow-audit/07-report-delivery.png)
+
+The report preview makes delivery feel like earned value instead of a lead gate. Remove the redundant **Email my private report** checkbox: entering an email and pressing **Send my private report** is sufficient authorization for report fulfillment. Keep **I'd like Raphael to contact me about my options** separate, optional, and unchecked.
+
+Claims such as “we never sell your information” may appear only after the final privacy policy supports the exact wording.
+
+## Highest-impact implementation rules
+
+1. Collect the ownership representation once.
+2. Keep public results available when private chapters are skipped.
+3. Correctly separate value refinements from equity and proceeds calculations.
+4. Make report fulfillment transactional; do not bundle marketing, telephone, or SMS consent.
+5. Use explicit action labels even when surrounding brand language is poetic.
+6. Replace all mock figures, dates, addresses, provider names, and legal placeholders with live or reviewed production content.
+
+## Accessibility risks visible in the references
+
+- Small uppercase labels, muted copy, thin brass borders, and electric-blue text can fall below readable contrast at display size. Production uses the locked accessible color roles in the design system.
+- Dense desktop footer content must become a stacked disclosure area on narrow screens rather than scale down.
+- Range charts require text equivalents for both bounds, confidence, and meaning; color and glow cannot carry meaning alone.
+- Ownership, consent, and optional-input controls require native semantics, visible focus, generous hit targets, and linked explanatory text.
+- Motion and glow must honor reduced-motion and increased-contrast preferences.
+
+## Evidence limits
+
+This audit evaluates static approved mockups. Keyboard order, screen-reader output, validation, loading, focus management, responsive behavior, reduced motion, API failures, and real-device performance require testing against the implemented application.

@@ -1,0 +1,190 @@
+---
+title: "Design system brief"
+description: "Visual constraints required before production UI generation"
+---
+
+## Desired impression
+
+Calm, premium, precise, and human. The experience should feel like a trusted financial decision tool, not an aggressive funnel or generic real-estate template.
+
+## Approved visual direction
+
+The selected family is a cinematic **living property portrait**:
+
+- Midnight-navy architectural environment with restrained carbon texture
+- Coastal property photography dissolving into parcel geometry and public-data linework
+- Electro-blue and electro-white information light
+- Editorial serif headlines paired with a precise geometric sans-serif interface
+- Brushed brass limited primarily to the RK mark, hairline separators, and quiet material highlights
+- One dominant visual and one dominant action per screen
+
+This direction must remain a homeowner intelligence experience. It must not drift into a luxury-listing catalog, agent-first dashboard, or decorative concept that hides inputs, sources, assumptions, or uncertainty.
+
+## Approved opening sequence
+
+The selected opening and preliminary-result references are:
+
+![Approved address-entry direction](/assets/visual-direction/entry-living-property-portrait-approved.png)
+
+![Approved preliminary-result direction](/assets/visual-direction/public-result-approved.png)
+
+Use **See my preliminary range** for the primary entry action. “Property portrait” remains supporting brand language rather than the button label.
+
+## Approved ownership sequence
+
+Both reference screens are approved because they serve consecutive states:
+
+1. **Public/private diptych:** establishes the ownership threshold and keeps the public result available.
+2. **Guided refinement:** previews the optional private chapters after the visitor has crossed that threshold.
+
+The implementation must not combine them into one overloaded screen. No private field is enabled before the visitor affirms, “I confirm that I personally own this property.” The adjacent explanation must say that this is the visitor's representation, not independent title verification.
+
+![Approved public and private diptych](/assets/visual-direction/ownership-public-private-diptych-approved.png)
+
+![Approved guided refinement direction](/assets/visual-direction/ownership-guided-refinement-approved.png)
+
+## Approved refinement sequence
+
+The refinement experience uses two approved screens with separate jobs:
+
+1. **Four-Chapter Refinement:** the guided data-entry flow. Present one calm chapter at a time—property condition, improvements, mortgage/payoff, and selling-cost assumptions—with clear progress, optional fields, and an immediate explanation of what each answer changes.
+2. **Private Decision Sheet:** the consolidated review and output state. Show homeowner inputs, their provenance, what each input affects, the refined value range, estimated equity, and estimated net proceeds together before the visitor requests delivery or advisor help.
+
+Do not merge these into one crowded screen. Every private input must remain optional, correctable, visibly labeled as user-provided, and covered by the confirmed-ownership boundary.
+
+The calculation boundary must remain explicit:
+
+- Condition and supported improvements may refine the estimated value range.
+- Mortgage payoff affects estimated equity and net proceeds, not the property's value.
+- Selling-cost assumptions affect estimated net proceeds, not the property's value.
+- Unknown inputs must remain unknown or use a clearly labeled editable assumption; the interface must never imply invented precision.
+
+![Approved Four-Chapter Refinement](/assets/visual-direction/refinement-four-chapter-guided-approved.png)
+
+![Approved Private Decision Sheet](/assets/visual-direction/refinement-private-decision-sheet-approved.png)
+
+## Approved final delivery screen
+
+The selected final state is the **Private Portfolio** direction. It completes the value exchange before offering human help:
+
+1. Show the homeowner's refined value, equity, and proceeds as ranges with the same provenance and uncertainty rules used throughout the experience.
+2. Make the private report preview and report delivery the dominant visual and primary action.
+3. Keep **Download a summary now** and **Review my inputs** available without forcing a consultation request.
+4. Present advisor contact as a separate, optional, unchecked choice: **I'd like Raphael to contact me about my options.**
+5. State beside that choice that the report can be delivered without requesting a consultation.
+
+Entering an email and requesting the report authorizes only delivery and operational messages necessary to fulfill that request. It must not silently authorize marketing, telephone calls, text messages, or enrollment in a nurture campaign. Any broader contact permission requires its own clear, unchecked consent control and auditable consent record.
+
+The production screen must use final reviewed legal language and accurate brokerage disclosures. The reference image establishes hierarchy, atmosphere, and interaction boundaries; sample figures and placeholder legal copy are not production content.
+
+![Approved Private Portfolio delivery direction](/assets/visual-direction/final-private-portfolio-delivery-approved.png)
+
+## Logo treatment
+
+Preserve the original RK geometry, typography, wording, metallic construction, and eXp/Southern California lockup. Integrate the plaque by shifting only the black field, carbon surround, and atmospheric shadow into midnight navy, with a restrained electro-blue edge reflection.
+
+The generated treatment below is the approved **material and color reference**, not permission to retype or AI-redraw the production logo. Production must use the highest-fidelity original or an authorized source asset and must be checked letter-for-letter.
+
+![RK midnight navy treatment](/assets/visual-direction/rk-logo-midnight-navy-treatment.png)
+
+## Principles
+
+- Hierarchy before decoration
+- Warm restraint rather than sterile fintech
+- Generous whitespace around important decisions
+- Dense details only inside structured comparison surfaces
+- Visible evidence and assumptions
+- Motion that explains real state changes
+- No artificial urgency
+
+## Locked production tokens
+
+### Color roles
+
+| Role | Value | Use |
+|---|---|---|
+| Midnight canvas | `#020B14` | Primary page background |
+| Navy surface | `#071523` | Panels, fields, and quiet separation |
+| Elevated navy | `#0A1B2A` | Hovered or selected dark surfaces |
+| Ivory primary | `#F2E9DC` | Headlines and high-priority values |
+| Cool secondary | `#B8C2CC` | Body text and labels |
+| Muted readable | `#8D9AA8` | Supporting copy; never smaller than 14px |
+| Electric action | `#5A8CFF` | Links, focus, active data, and outlined actions |
+| Electric fill | `#2F6BFF` | Filled primary buttons with ivory or white text |
+| Coastal signal | `#27C9C3` | Calculated/provenance accent used sparingly |
+| Brushed brass | `#B88952` | Logo material, hairlines, and nonessential highlights |
+| Critical | `#FF7A7A` | Errors and destructive warnings |
+| Success | `#54D6A0` | Confirmed success states |
+
+Ivory, secondary, muted, electric action, coastal signal, and brass meet AA text contrast against the midnight canvas at the specified roles. `#2F6BFF` is a fill or large graphical accent, not small text on midnight.
+
+### Typography
+
+- Display and financial editorial: **Cormorant Garamond**, weights 500 and 600.
+- Interface and body: **Manrope**, weights 400, 500, 600, and 700.
+- Use tabular numerals for money, ranges, percentages, dates, and comparison tables.
+- Desktop display: 64/68; page title: 48/54; section title: 32/38; body: 16/26; supporting: 14/22; eyebrow: 12/16 with 0.18em tracking.
+- Mobile display: 42/46; page title: 34/40; section title: 26/32; body: 16/25; supporting text never below 14/21.
+- Maximum body-copy line length: 65 characters.
+
+### Spacing and layout
+
+- Spacing scale: `4, 8, 12, 16, 24, 32, 48, 64, 96`.
+- Desktop content maximum: 1440px viewport with 48–64px outer gutters and a 12-column grid.
+- Tablet gutters: 32px. Mobile gutters: 20px.
+- Minimum separation between unrelated actions: 16px.
+- Minimum interactive target: 44 by 44px; primary mobile controls: 48px high.
+- Border radii: 6px fields/buttons, 10px data surfaces, 16px only for major glass layers. Do not introduce pill-shaped containers except status tags.
+
+### Borders, depth, and glow
+
+- Default border: 1px `rgba(184, 137, 82, 0.42)`.
+- Quiet divider: 1px `rgba(184, 194, 204, 0.16)`.
+- Active/focus border: 2px `#5A8CFF`, plus a visible 3px outer focus halo at 35% opacity.
+- Panel shadow: `0 24px 64px rgba(0, 0, 0, 0.32)`.
+- Electric glow is limited to selected data points, focus, and state transitions. Never place glow behind body copy.
+
+### Controls
+
+- Primary button: electric fill, 52px desktop height, 48px mobile height, 16px minimum horizontal padding, Manrope 600.
+- Secondary button: transparent navy surface with electric-action border.
+- Quiet/tertiary action: text link with visible underline on hover and focus.
+- Fields use navy surface, ivory input text, persistent external labels, descriptive/error text below, and no placeholder-only labels.
+- Checkboxes and radio controls remain native-semantic, unchecked by default for ownership and consent, and use at least a 44px combined hit area.
+- Disabled controls must include explanatory text; opacity alone is insufficient.
+
+### Charts and provenance
+
+- Public source: brass icon plus text label.
+- User-provided: ivory person icon plus text label.
+- Calculated: coastal signal plus text label.
+- Low/high bounds always appear as text adjacent to the visualization.
+- Confidence includes a word label, explanation, and source/effective date.
+- No result relies on color, line shape, animation, or glow alone.
+
+### Motion
+
+- Control feedback: 160ms; panel transition: 240ms; major result reveal: 480ms maximum.
+- Use ease-out for arrival and ease-in for departure.
+- Parallax movement remains under 8px and is disabled for reduced motion.
+- Loading animation represents actual provider work and never delays an available result for theatrical effect.
+- Reduced-motion mode removes parallax, particles, animated drawing, and number tweening while preserving immediate state changes.
+
+## Responsive behavior
+
+- Mobile order is task-first: title and essential explanation, active input/result, primary action, supporting evidence, disclosures.
+- Sidebars become in-flow sections; they do not become hidden drawers for required information.
+- The Four-Chapter Refinement shows one chapter plus a compact progress indicator, not the full desktop rail.
+- The Decision Sheet converts from a wide table into repeated labeled rows; every row keeps source, effect, optional status, and edit action together.
+- The Private Portfolio stacks refined ranges, report preview, delivery, and optional advisor consent in that order.
+- Brokerage and legal disclosures stack at readable size. They never shrink to preserve a desktop footer.
+
+## Required reference screens
+
+Desktop visual references are approved for address entry, public result, ownership, refinement, review, and report delivery. Mobile compositions and loading, partial-data, low-confidence, validation, report-success, and provider-failure states still require reference approval before implementation sign-off.
+
+## Accessibility baseline
+
+WCAG AA contrast, keyboard access, visible focus, semantic labels, linked errors, reduced motion, no color-only meaning, and readable financial tables at 200% zoom.
+
+The exact Lovable prompt is generated only after references and tokens are approved. Every micro-app must inherit the same rules.

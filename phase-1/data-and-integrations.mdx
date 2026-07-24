@@ -1,0 +1,67 @@
+---
+title: "Data and integrations"
+description: "Provider boundaries, CRM routes, payloads, and technical decisions"
+---
+
+## Production pattern
+
+**Lovable-native:** Lovable React app in its own generated GitHub repository, Vercel previews/hosting, Supabase Edge Functions for authenticated provider calls, optional Supabase persistence, and Figgy/API into BoldTrail.
+
+**Repository-native:** Existing supported app framework, Vercel hosting/functions, optional Supabase database, and Codex implementation from the frozen spec.
+
+Do not use Vercel Functions and Supabase Edge Functions for the same initial integration duties.
+
+## Property data
+
+**Provisionally cleared for specification and interface work:** Rapha received written guidance from REcore/CRMLS licensing that the landing page use is allowed when the required licensed name, DRE number, brokerage identity, and other applicable real-estate advertising compliance are present.
+
+Before live-data integration, preserve the source response and document the exact feed or endpoint, allowed fields, required attribution/disclosures, caching and retention rules, derivative/AVM and AI restrictions, limits, costs, confidence, and failure behavior. Public-display permission alone must not be interpreted as permission to cache data or create every possible derivative.
+
+## Public-data boundary
+
+Provider-derived inputs and displayed facts must be information a consumer could obtain publicly. A provider's ability to return a field does not make that field eligible for use.
+
+- Do not retrieve or display private MLS remarks, showing instructions, agent-only fields, private contact information, non-public loan data, hidden distress indicators, CRM history, or third-party behavioral profiles.
+- Do not infer mortgage balance, delinquency, hardship, occupancy, ownership, or readiness from public facts.
+- Non-public property facts may enter the experience only when the visitor knowingly supplies them about a property they personally own.
+- Before accepting mortgage, lien, condition, renovation, hardship, or other non-public facts, require a clear ownership attestation. Do not claim that the attestation independently verifies title.
+- Label every result input as **public source**, **user-provided**, or **calculated**, and preserve that provenance through calculations, reports, and CRM delivery.
+- Minimize public facts to those needed for the current result. Public availability is not permission to expose owner identities or unrelated personal details.
+
+## BoldTrail candidates
+
+Rapha identified Figgy lead/contact push, lead-ingestion email, API access, and Smart Campaign webhook actions after a contact exists. A non-production Figgy test contact reached BoldTrail successfully on 2026-07-22, making Figgy the leading Phase 1 route. Selection remains conditional on verifying structured fields, source, consent, idempotency, retries, duplicate behavior, and errors. Do not build a second ingestion route unless it provides a defined fallback or capability Figgy lacks.
+
+## Minimum lead payload
+
+| Field | Requirement |
+|---|---|
+| Name/email/phone | Open; delivery-dependent |
+| Property address | Required for the requested brief |
+| Source | `instant_value_equity` |
+| Requested deliverable | Required |
+| Submitted corrections | Include when disclosed |
+| Mortgage balance | Only when knowingly submitted and needed |
+| Ownership attestation | Required before accepting non-public property facts |
+| Data provenance | Public source, user-provided, or calculated for every result input |
+| Contact preference | Required for follow-up |
+| Consent version and time | Required |
+| Idempotency key | Required |
+
+## Idempotency contract
+
+The browser creates a random request token for each intentional deliverable request and retains it through retries. The server also computes a deduplication fingerprint using an HMAC of normalized property address, normalized delivery destination, requested deliverable, and consent version. Raw personal information must not appear in the stored key.
+
+- Deduplication window: **15 minutes** from the first accepted request.
+- A retry with the same request token returns the original receipt.
+- A matching fingerprint within the window updates or confirms the existing delivery record instead of creating a second CRM contact, campaign enrollment, report, or message.
+- A changed destination, deliverable, or consent version creates a new request.
+- Pass the stable request ID to Figgy/BoldTrail/API as an external reference when supported.
+
+## Secrets and persistence
+
+Keep credentials in the selected server-side function environment, never browser code or Git. Keep preview and production separate. Add Supabase tables only for an approved purpose such as consent receipts, a minimal delivery ledger, saved reports, or later dashboards. BoldTrail remains the CRM system of record.
+
+## Reusable calculation boundary
+
+All financial calculations must live in a pure, framework-independent TypeScript module with no React, browser, database, provider, or UI imports. UI and server endpoints call the same tested functions. The implementation review must reject duplicated formulas or component-owned financial logic.
