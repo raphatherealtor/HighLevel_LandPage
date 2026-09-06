@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NVIM 5-Trait Force Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
 /* D3 v7.9.0 — bundled inline so this file has zero external dependencies and works fully offline / behind firewalls that block CDNs. */
 // https://d3js.org v7.9.0 Copyright 2010-2023 Mike Bostock
@@ -22,6 +25,9 @@
             --text: #c9d1d9;
             --dim: #8b949e;
             --grid-line: rgba(88, 166, 255, 0.12);
+            --font-display: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
         }
 
         * { box-sizing: border-box; }
@@ -31,7 +37,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-body);
             background: var(--void);
             color: var(--text);
             margin: 0;
@@ -105,17 +111,42 @@
 
         .header {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 26px;
             position: relative;
             z-index: 1;
         }
-        h1 {
-            margin: 0 0 8px 0;
-            color: var(--accent);
-            letter-spacing: 1px;
-            text-shadow: 0 0 18px rgba(163, 113, 247, 0.5);
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            opacity: 0.75;
+            margin: 0 0 10px 0;
         }
-        p { margin: 0; font-size: 14px; color: var(--dim); letter-spacing: 0.5px; }
+        h1 {
+            font-family: var(--font-display);
+            font-size: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
+            letter-spacing: 3px;
+            line-height: 1.1;
+            background: linear-gradient(180deg, #fff 0%, var(--accent) 120%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 22px rgba(163, 113, 247, 0.45));
+        }
+        p {
+            margin: 0;
+            font-family: var(--font-body);
+            font-size: 14.5px;
+            font-weight: 400;
+            color: var(--dim);
+            letter-spacing: 0.3px;
+        }
 
         /* ---------- HUD stat strip ---------- */
         .hud-strip {
@@ -130,21 +161,24 @@
             background: var(--panel);
             border: 1px solid var(--panel-border);
             border-radius: 10px;
-            padding: 8px 16px;
-            min-width: 120px;
+            padding: 10px 18px;
+            min-width: 128px;
             text-align: center;
             backdrop-filter: blur(6px);
         }
         .hud-tile .hud-label {
-            font-size: 10px;
+            font-family: var(--font-display);
+            font-size: 10.5px;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: var(--dim);
         }
         .hud-tile .hud-value {
-            font-family: 'SF Mono', Consolas, monospace;
-            font-size: 20px;
+            font-family: var(--font-mono);
+            font-size: 21px;
             font-weight: 700;
+            letter-spacing: 0.5px;
             transition: color 0.3s;
         }
 
@@ -172,9 +206,11 @@
         }
 
         .controls h2 {
-            font-size: 12px;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--accent-2);
             margin: 0 0 4px 0;
             padding-bottom: 8px;
@@ -186,8 +222,16 @@
             flex-direction: column;
             gap: 6px;
         }
-        label { font-weight: 600; font-size: 12.5px; color: var(--text); display: flex; justify-content: space-between; }
-        label .unit { color: var(--dim); font-weight: 400; font-family: monospace; }
+        label {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+        }
+        label .unit { color: var(--accent-2); font-weight: 600; font-family: var(--font-mono); font-size: 13px; }
 
         input[type="range"] {
             -webkit-appearance: none;
@@ -220,11 +264,13 @@
         .tick-row {
             display: flex;
             justify-content: space-between;
-            font-size: 9px;
-            color: #4d5560;
-            font-family: monospace;
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            letter-spacing: 0.3px;
+            color: #566073;
+            text-transform: uppercase;
         }
-        .value-display { font-size: 11px; color: var(--dim); text-align: right; font-family: monospace; }
+        .value-display { font-family: var(--font-mono); font-size: 11px; color: var(--dim); text-align: right; }
 
         #viz-container {
             flex: 1 1 auto;
@@ -273,9 +319,11 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
         .radar-panel h2 {
-            font-size: 12px;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--accent-2);
             margin: 0 0 4px 0;
             align-self: flex-start;
@@ -283,19 +331,24 @@
             border-bottom: 1px solid var(--panel-border);
             width: 100%;
         }
+        #radar-container svg { display: block; width: 100%; height: auto; }
+
         .composite-readout {
             text-align: center;
             margin-top: 8px;
         }
         .composite-readout .score {
-            font-size: 34px;
-            font-weight: 800;
-            font-family: 'SF Mono', Consolas, monospace;
+            font-family: var(--font-mono);
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             transition: color 0.4s;
         }
         .composite-readout .score-label {
-            font-size: 10px;
-            letter-spacing: 1.5px;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--dim);
         }
@@ -304,7 +357,10 @@
         .link { stroke-opacity: 0.7; transition: stroke-dasharray 0.3s, stroke-opacity 0.3s; }
         .node circle { stroke: #fff; stroke-width: 1.5px; transition: fill 0.3s, r 0.3s; }
         .node text {
-            font-size: 12px;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             fill: var(--text);
             pointer-events: none;
             text-anchor: middle;
@@ -313,7 +369,13 @@
         .radial-ring { fill: none; stroke: var(--grid-line); stroke-width: 1px; }
         .drift-trail { stroke: var(--accent-2); stroke-width: 1.5px; stroke-dasharray: 3, 5; opacity: 0.5; }
         .radar-grid-line { stroke: rgba(88,166,255,0.18); stroke-width: 1px; }
-        .radar-axis-label { fill: var(--dim); font-size: 10px; text-anchor: middle; font-family: monospace; }
+        .radar-axis-label {
+            fill: var(--dim);
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
         .radar-shape { fill-opacity: 0.28; stroke-width: 2px; transition: d 0.3s ease, stroke 0.3s, fill 0.3s; }
         .radar-vertex { transition: cx 0.3s ease, cy 0.3s ease, fill 0.3s; }
 
@@ -345,9 +407,10 @@
             gap: 8px;
         }
         .preset-btn {
-            font-family: inherit;
-            font-size: 12.5px;
+            font-family: var(--font-display);
+            font-size: 14px;
             font-weight: 600;
+            letter-spacing: 0.3px;
             color: var(--text);
             background: #161b22;
             border: 1px solid var(--panel-border);
@@ -378,8 +441,9 @@
     <div class="vignette"></div>
 
     <div class="header">
-        <h1>Neural Vector Interpretation Model (NVIM)</h1>
-        <p>Interactive 5-Trait Cognitive Force Simulation</p>
+        <div class="eyebrow">Cognitive Signal Analysis · Live Simulation</div>
+        <h1>Neural Vector Interpretation Model</h1>
+        <p>Interactive 5-trait force simulation of emotional &amp; linguistic drift</p>
     </div>
 
     <div class="hud-strip">
@@ -605,11 +669,12 @@
         // Radar / Spider Grid — pentagon representation of the 5 traits
         // ============================================================
         const RADAR_SIZE = 260;
+        const RADAR_PAD = 52; // margin around the grid so axis labels (e.g. "Resonance") never clip the viewBox edge
+        const RADAR_VIEW = RADAR_SIZE + RADAR_PAD * 2;
         const radarSvg = d3.select("#radar-container")
             .append("svg")
-            .attr("width", RADAR_SIZE)
-            .attr("height", RADAR_SIZE)
-            .attr("viewBox", [0, 0, RADAR_SIZE, RADAR_SIZE]);
+            .attr("width", "100%")
+            .attr("viewBox", [-RADAR_PAD, -RADAR_PAD, RADAR_VIEW, RADAR_VIEW]);
 
         const radarDefs = radarSvg.append("defs");
         const radarGlow = radarDefs.append("filter")
@@ -654,12 +719,14 @@
                 .attr("x2", x).attr("y2", y);
         });
 
-        // Axis labels
+        // Axis labels — anchor left/right at the sides so long labels (e.g. "Resonance") never clip the viewBox edge
         d3.range(AXIS_COUNT).forEach(i => {
-            const [x, y] = axisPoint(i, 1.18);
+            const [x, y] = axisPoint(i, 1.14);
+            const anchor = x < rCenter - 4 ? "end" : x > rCenter + 4 ? "start" : "middle";
             radarGroup.append("text")
                 .attr("class", "radar-axis-label")
                 .attr("x", x).attr("y", y)
+                .attr("text-anchor", anchor)
                 .text(axes[i]);
         });
 
