@@ -331,6 +331,37 @@
             .dashboard { flex-direction: column; }
             .controls, .radar-panel { flex: 1 1 auto; }
         }
+
+        /* ---------- Presentation Mode ---------- */
+        .preset-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .preset-btn {
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+            background: #161b22;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+        .preset-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(163, 113, 247, 0.35);
+        }
+        .preset-btn:active { transform: scale(0.98); }
+        .preset-btn.playing {
+            border-color: var(--accent);
+            box-shadow: 0 0 14px rgba(163, 113, 247, 0.6);
+            color: #fff;
+        }
+        .preset-btn:disabled { cursor: wait; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -387,6 +418,14 @@
                 <label>5. Resonance Alignment <span class="unit" id="resonance-val">10</span>%</label>
                 <input type="range" id="resonance" min="0" max="100" value="10">
                 <div class="tick-row"><span>0</span><span>50</span><span>100</span></div>
+            </div>
+
+            <h2 style="margin-top: 4px;">Presentation Mode</h2>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-preset="baseline">😐 Detached Baseline</button>
+                <button class="preset-btn" data-preset="anger">🔥 Anger Spike</button>
+                <button class="preset-btn" data-preset="fragmentation">💔 Fragmented Signal</button>
+                <button class="preset-btn" data-preset="resonance">💗 Resonance Match</button>
             </div>
         </div>
 
@@ -699,6 +738,68 @@
         // Attach Listeners
         document.querySelectorAll("input[type=range]").forEach(input => {
             input.addEventListener("input", updatePhysics);
+        });
+
+        // ============================================================
+        // Presentation Mode — eased tween to a preset trait signature,
+        // so a live audience sees the transition, not a hard jump.
+        // ============================================================
+        const presets = {
+            baseline:      { ewv: 20, tone: -60, semantic: 60,  syntax: 0, resonance: 10  },
+            anger:         { ewv: 92, tone: 70,  semantic: 40,  syntax: 2, resonance: 30  },
+            fragmentation: { ewv: 55, tone: 20,  semantic: 100, syntax: 9, resonance: 15  },
+            resonance:     { ewv: 45, tone: 10,  semantic: 50,  syntax: 0, resonance: 100 }
+        };
+
+        const sliderEls = {
+            ewv: document.getElementById("ewv"),
+            tone: document.getElementById("tone"),
+            semantic: document.getElementById("semantic"),
+            syntax: document.getElementById("syntax"),
+            resonance: document.getElementById("resonance")
+        };
+
+        const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        let presetAnimId = null;
+
+        function playPreset(name, btn) {
+            const target = presets[name];
+            if (!target || presetAnimId) return;
+
+            const start = {};
+            Object.keys(sliderEls).forEach(key => { start[key] = +sliderEls[key].value; });
+
+            const duration = 1400;
+            const t0 = performance.now();
+            const buttons = document.querySelectorAll(".preset-btn");
+            buttons.forEach(b => { b.disabled = true; b.classList.remove("playing"); });
+            btn.classList.add("playing");
+
+            function step(now) {
+                const t = Math.min(1, (now - t0) / duration);
+                const eased = easeInOutCubic(t);
+
+                Object.keys(sliderEls).forEach(key => {
+                    const v = start[key] + (target[key] - start[key]) * eased;
+                    sliderEls[key].value = key === "semantic" || key === "ewv" || key === "resonance"
+                        ? Math.round(v)
+                        : Math.round(v * 10) / 10;
+                });
+                updatePhysics();
+
+                if (t < 1) {
+                    presetAnimId = requestAnimationFrame(step);
+                } else {
+                    presetAnimId = null;
+                    buttons.forEach(b => { b.disabled = false; });
+                }
+            }
+            presetAnimId = requestAnimationFrame(step);
+        }
+
+        document.querySelectorAll(".preset-btn").forEach(btn => {
+            btn.addEventListener("click", () => playPreset(btn.dataset.preset, btn));
         });
 
         // Drag functions for physics simulation
