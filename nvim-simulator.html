@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIM 5-Trait Force Simulator</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --void: #05070d;
+            --panel: #0d1117ee;
+            --panel-border: #30363d;
+            --accent: #a371f7;
+            --accent-2: #58a6ff;
+            --hot: #f85149;
+            --warn: #d29922;
+            --text: #c9d1d9;
+            --dim: #8b949e;
+            --grid-line: rgba(88, 166, 255, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--void);
+            color: var(--text);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ---------- Immersive backdrop: perspective grid floor + nebula glow ---------- */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(ellipse 60% 40% at 50% 0%, rgba(163, 113, 247, 0.22), transparent 65%),
+                radial-gradient(ellipse 50% 35% at 85% 100%, rgba(88, 166, 255, 0.16), transparent 60%),
+                radial-gradient(ellipse 50% 35% at 10% 90%, rgba(248, 81, 73, 0.08), transparent 60%),
+                var(--void);
+        }
+
+        .grid-floor {
+            position: fixed;
+            left: -50%;
+            right: -50%;
+            bottom: -10%;
+            height: 70vh;
+            z-index: -1;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 48px 48px;
+            transform: perspective(400px) rotateX(68deg);
+            transform-origin: bottom center;
+            mask-image: linear-gradient(to top, black 0%, transparent 85%);
+            -webkit-mask-image: linear-gradient(to top, black 0%, transparent 85%);
+            animation: floorDrift 6s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes floorDrift {
+            from { background-position: 0 0, 0 0; }
+            to   { background-position: 0 48px, 0 0; }
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.025) 0px,
+                rgba(255,255,255,0.025) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            mix-blend-mode: overlay;
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 49;
+            pointer-events: none;
+            box-shadow: inset 0 0 220px rgba(0,0,0,0.75);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-shadow: 0 0 18px rgba(163, 113, 247, 0.5);
+        }
+        p { margin: 0; font-size: 14px; color: var(--dim); letter-spacing: 0.5px; }
+
+        /* ---------- HUD stat strip ---------- */
+        .hud-strip {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 1;
+        }
+        .hud-tile {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 8px 16px;
+            min-width: 120px;
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+        .hud-tile .hud-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--dim);
+        }
+        .hud-tile .hud-value {
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 20px;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-width: 1320px;
+            align-items: stretch;
+            z-index: 1;
+        }
+
+        .controls {
+            flex: 0 0 300px;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .controls h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-2);
+            margin: 0 0 4px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        label { font-weight: 600; font-size: 12.5px; color: var(--text); display: flex; justify-content: space-between; }
+        label .unit { color: var(--dim); font-weight: 400; font-family: monospace; }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            cursor: pointer;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 8px rgba(163, 113, 247, 0.9);
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 8px rgba(163, 113, 247, 0.9);
+            cursor: pointer;
+        }
+        .tick-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #4d5560;
+            font-family: monospace;
+        }
+        .value-display { font-size: 11px; color: var(--dim); text-align: right; font-family: monospace; }
+
+        #viz-container {
+            flex: 1 1 auto;
+            min-width: 0;
+            background: radial-gradient(ellipse at center, #0a0e17 0%, #000000 100%);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8), inset 0 0 60px rgba(88,166,255,0.05);
+            position: relative;
+        }
+
+        #viz-container::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border: 1px solid transparent;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+        }
+
+        .corner {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent);
+            opacity: 0.6;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+        .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+        .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+        .radar-panel {
+            flex: 0 0 300px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .radar-panel h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-2);
+            margin: 0 0 4px 0;
+            align-self: flex-start;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--panel-border);
+            width: 100%;
+        }
+        .composite-readout {
+            text-align: center;
+            margin-top: 8px;
+        }
+        .composite-readout .score {
+            font-size: 34px;
+            font-weight: 800;
+            font-family: 'SF Mono', Consolas, monospace;
+            transition: color 0.4s;
+        }
+        .composite-readout .score-label {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--dim);
+        }
+
+        /* SVG Styles */
+        .link { stroke-opacity: 0.7; transition: stroke-dasharray 0.3s, stroke-opacity 0.3s; }
+        .node circle { stroke: #fff; stroke-width: 1.5px; transition: fill 0.3s, r 0.3s; }
+        .node text {
+            font-size: 12px;
+            fill: var(--text);
+            pointer-events: none;
+            text-anchor: middle;
+            text-shadow: 0 1px 4px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
+        }
+        .radial-ring { fill: none; stroke: var(--grid-line); stroke-width: 1px; }
+        .radar-grid-line { stroke: rgba(88,166,255,0.18); stroke-width: 1px; }
+        .radar-axis-label { fill: var(--dim); font-size: 10px; text-anchor: middle; font-family: monospace; }
+        .radar-shape { fill-opacity: 0.28; stroke-width: 2px; transition: d 0.3s ease, stroke 0.3s, fill 0.3s; }
+        .radar-vertex { transition: cx 0.3s ease, cy 0.3s ease, fill 0.3s; }
+
+        /* Pulse Animation for Resonance */
+        @keyframes pulse {
+            0% { filter: drop-shadow(0 0 2px rgba(163, 113, 247, 0.4)); }
+            50% { filter: drop-shadow(0 0 18px rgba(163, 113, 247, 1)); }
+            100% { filter: drop-shadow(0 0 2px rgba(163, 113, 247, 0.4)); }
+        }
+        .resonating circle {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes scorePulse {
+            0%, 100% { text-shadow: 0 0 6px currentColor; }
+            50% { text-shadow: 0 0 20px currentColor; }
+        }
+        .score.hot { animation: scorePulse 1.2s infinite; }
+
+        @media (max-width: 1050px) {
+            .dashboard { flex-direction: column; }
+            .controls, .radar-panel { flex: 1 1 auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="backdrop"></div>
+    <div class="grid-floor"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <div class="header">
+        <h1>Neural Vector Interpretation Model (NVIM)</h1>
+        <p>Interactive 5-Trait Cognitive Force Simulation</p>
+    </div>
+
+    <div class="hud-strip">
+        <div class="hud-tile"><div class="hud-label">Composite Index</div><div class="hud-value" id="hud-composite" style="color: var(--accent-2)">0</div></div>
+        <div class="hud-tile"><div class="hud-label">Dominant Trait</div><div class="hud-value" id="hud-dominant" style="color: var(--accent); font-size: 15px;">—</div></div>
+        <div class="hud-tile"><div class="hud-label">State</div><div class="hud-value" id="hud-state" style="color: var(--warn); font-size: 15px;">STABLE</div></div>
+    </div>
+
+    <div class="dashboard">
+        <div class="controls">
+            <h2>Input Vectors</h2>
+            <!-- 1. Emotional Weight -->
+            <div class="control-group">
+                <label>1. Emotional Weight Vector (EWV) <span class="unit" id="ewv-val">30</span></label>
+                <input type="range" id="ewv" min="0" max="100" value="30">
+                <div class="tick-row"><span>0</span><span>50</span><span>100</span></div>
+            </div>
+
+            <!-- 2. Tone Cluster -->
+            <div class="control-group">
+                <label>2. Tone Cluster Gravity <span class="unit" id="tone-val">-30</span></label>
+                <input type="range" id="tone" min="-100" max="100" value="-30">
+                <div class="tick-row"><span>Detached</span><span>0</span><span>Urgent</span></div>
+            </div>
+
+            <!-- 3. Semantic Vector -->
+            <div class="control-group">
+                <label>3. Semantic Vector <span class="unit" id="semantic-val">80</span>px</label>
+                <input type="range" id="semantic" min="20" max="150" value="80">
+                <div class="tick-row"><span>Tight</span><span>—</span><span>Loose</span></div>
+            </div>
+
+            <!-- 4. Marker Patterns -->
+            <div class="control-group">
+                <label>4. Syntactic Fragmentation <span class="unit" id="syntax-val">0</span></label>
+                <input type="range" id="syntax" min="0" max="10" value="0">
+                <div class="tick-row"><span>Coherent</span><span>—</span><span>Broken</span></div>
+            </div>
+
+            <!-- 5. Resonance Alignment -->
+            <div class="control-group">
+                <label>5. Resonance Alignment <span class="unit" id="resonance-val">10</span>%</label>
+                <input type="range" id="resonance" min="0" max="100" value="10">
+                <div class="tick-row"><span>0</span><span>50</span><span>100</span></div>
+            </div>
+        </div>
+
+        <div id="viz-container">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+        </div>
+
+        <div class="radar-panel">
+            <h2>5-Trait Signature</h2>
+            <div id="radar-container"></div>
+            <div class="composite-readout">
+                <div class="score" id="radar-score">0</div>
+                <div class="score-label">Composite Signal</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // Graph Data: Central Emotional Core + Semantic Cluster
+        // ============================================================
+        const graph = {
+            nodes: [
+                { id: "Core Emotion", group: 1, isCore: true },
+                { id: "Frustration", group: 2 },
+                { id: "Fatigue", group: 2 },
+                { id: "Doubt", group: 2 },
+                { id: "Aspiration", group: 2 },
+                { id: "Masking", group: 2 }
+            ],
+            links: [
+                { source: "Core Emotion", target: "Frustration" },
+                { source: "Core Emotion", target: "Fatigue" },
+                { source: "Core Emotion", target: "Doubt" },
+                { source: "Core Emotion", target: "Aspiration" },
+                { source: "Core Emotion", target: "Masking" }
+            ]
+        };
+
+        const width = 640;
+        const height = 460;
+
+        const svg = d3.select("#viz-container")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", height)
+            .attr("viewBox", [0, 0, width, height]);
+
+        // ---------- Defs: glow filters + gradients ----------
+        const defs = svg.append("defs");
+
+        const glowFilter = defs.append("filter")
+            .attr("id", "glow")
+            .attr("x", "-100%").attr("y", "-100%")
+            .attr("width", "300%").attr("height", "300%");
+        glowFilter.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "blur");
+        const feMerge = glowFilter.append("feMerge");
+        feMerge.append("feMergeNode").attr("in", "blur");
+        feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+        const linkGradient = defs.append("linearGradient")
+            .attr("id", "link-gradient")
+            .attr("gradientUnits", "userSpaceOnUse");
+        linkGradient.append("stop").attr("offset", "0%").attr("stop-color", "#a371f7");
+        linkGradient.append("stop").attr("offset", "100%").attr("stop-color", "#58a6ff");
+
+        // ---------- Background radial grid rings (visual depth) ----------
+        const bgGroup = svg.append("g").attr("class", "bg-grid");
+        const cx = width / 2, cy = height / 2;
+        [60, 120, 180, 240].forEach(r => {
+            bgGroup.append("circle")
+                .attr("class", "radial-ring")
+                .attr("cx", cx).attr("cy", cy).attr("r", r);
+        });
+        // faint crosshair
+        bgGroup.append("line").attr("class", "radial-ring").attr("x1", 0).attr("y1", cy).attr("x2", width).attr("y2", cy);
+        bgGroup.append("line").attr("class", "radial-ring").attr("x1", cx).attr("y1", 0).attr("x2", cx).attr("y2", height);
+
+        // Color scale for EWV (Cool Blue -> Hot Red)
+        const heatColor = d3.scaleLinear()
+            .domain([0, 50, 100])
+            .range(["#58a6ff", "#d29922", "#f85149"])
+            .clamp(true);
+
+        // ---------- D3 Force Simulation (tuned for stability) ----------
+        const simulation = d3.forceSimulation(graph.nodes)
+            .force("link", d3.forceLink(graph.links).id(d => d.id).distance(80))
+            .force("charge", d3.forceManyBody().strength(-30))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide().radius(30))
+            .velocityDecay(0.55)
+            .alphaDecay(0.03);
+
+        // Draw Links
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .attr("stroke", "url(#link-gradient)")
+            .attr("stroke-width", 2);
+
+        // Draw Nodes
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(graph.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        const circles = node.append("circle")
+            .attr("r", d => d.isCore ? 20 : 12)
+            .attr("fill", d => d.isCore ? "#58a6ff" : "#30363d")
+            .style("filter", "url(#glow)");
+
+        node.append("text")
+            .attr("dy", d => d.isCore ? -25 : 20)
+            .text(d => d.id);
+
+        // Padding so nodes can't drift off-canvas at extreme repulsion
+        const PAD = 24;
+        simulation.on("tick", () => {
+            graph.nodes.forEach(d => {
+                d.x = Math.max(PAD, Math.min(width - PAD, d.x));
+                d.y = Math.max(PAD, Math.min(height - PAD, d.y));
+            });
+
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        // ============================================================
+        // Radar / Spider Grid — pentagon representation of the 5 traits
+        // ============================================================
+        const RADAR_SIZE = 260;
+        const radarSvg = d3.select("#radar-container")
+            .append("svg")
+            .attr("width", RADAR_SIZE)
+            .attr("height", RADAR_SIZE)
+            .attr("viewBox", [0, 0, RADAR_SIZE, RADAR_SIZE]);
+
+        const radarDefs = radarSvg.append("defs");
+        const radarGlow = radarDefs.append("filter")
+            .attr("id", "radar-glow")
+            .attr("x", "-60%").attr("y", "-60%")
+            .attr("width", "220%").attr("height", "220%");
+        radarGlow.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "blur");
+        const radarMerge = radarGlow.append("feMerge");
+        radarMerge.append("feMergeNode").attr("in", "blur");
+        radarMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+        const axes = ["EWV", "Tone", "Semantic", "Syntax", "Resonance"];
+        const AXIS_COUNT = axes.length;
+        const rCenter = RADAR_SIZE / 2;
+        const rMax = RADAR_SIZE / 2 - 30;
+
+        function axisAngle(i) {
+            return (Math.PI * 2 * i / AXIS_COUNT) - Math.PI / 2;
+        }
+        function axisPoint(i, frac) {
+            const angle = axisAngle(i);
+            return [rCenter + Math.cos(angle) * rMax * frac, rCenter + Math.sin(angle) * rMax * frac];
+        }
+
+        const radarGroup = radarSvg.append("g");
+
+        // Concentric pentagon grid rings
+        [0.2, 0.4, 0.6, 0.8, 1.0].forEach(level => {
+            const pts = d3.range(AXIS_COUNT).map(i => axisPoint(i, level));
+            radarGroup.append("polygon")
+                .attr("class", "radar-grid-line")
+                .attr("fill", "none")
+                .attr("points", pts.map(p => p.join(",")).join(" "));
+        });
+
+        // Spokes
+        d3.range(AXIS_COUNT).forEach(i => {
+            const [x, y] = axisPoint(i, 1.0);
+            radarGroup.append("line")
+                .attr("class", "radar-grid-line")
+                .attr("x1", rCenter).attr("y1", rCenter)
+                .attr("x2", x).attr("y2", y);
+        });
+
+        // Axis labels
+        d3.range(AXIS_COUNT).forEach(i => {
+            const [x, y] = axisPoint(i, 1.18);
+            radarGroup.append("text")
+                .attr("class", "radar-axis-label")
+                .attr("x", x).attr("y", y)
+                .text(axes[i]);
+        });
+
+        const radarShape = radarGroup.append("polygon")
+            .attr("class", "radar-shape")
+            .attr("fill", "#a371f7")
+            .attr("stroke", "#a371f7")
+            .style("filter", "url(#radar-glow)");
+
+        const radarVertices = radarGroup.selectAll(".radar-vertex")
+            .data(axes)
+            .enter().append("circle")
+            .attr("class", "radar-vertex")
+            .attr("r", 4)
+            .attr("fill", "#fff");
+
+        // ============================================================
+        // Interactive Update Function
+        // ============================================================
+        function updatePhysics() {
+            const ewv = +document.getElementById("ewv").value;
+            const tone = +document.getElementById("tone").value;
+            const semantic = +document.getElementById("semantic").value;
+            const syntax = +document.getElementById("syntax").value;
+            const resonance = +document.getElementById("resonance").value;
+
+            // Update Labels
+            document.getElementById("ewv-val").innerText = ewv;
+            document.getElementById("tone-val").innerText = tone;
+            document.getElementById("semantic-val").innerText = semantic;
+            document.getElementById("syntax-val").innerText = syntax;
+            document.getElementById("resonance-val").innerText = resonance;
+
+            // 1. Apply EWV (Size, Color and Glow of Core)
+            const coreColor = heatColor(ewv);
+            circles.filter(d => d.isCore)
+                .attr("r", 20 + (ewv / 4))
+                .attr("fill", coreColor)
+                .style("filter", `url(#glow) drop-shadow(0 0 ${6 + ewv / 6}px ${coreColor})`);
+
+            const clusterColor = ewv > 70 ? "#8a2a24" : "#30363d";
+            circles.filter(d => !d.isCore)
+                .attr("fill", clusterColor)
+                .style("filter", ewv > 70 ? `url(#glow) drop-shadow(0 0 6px ${clusterColor})` : "url(#glow)");
+
+            // 2 & 3. Apply Tone (Gravity) and Semantic Vector (Link Distance)
+            simulation.force("charge").strength(tone);
+            simulation.force("link").distance(semantic);
+            simulation.alpha(0.3).restart();
+
+            // link color tilts warmer as tone climbs toward "urgent"
+            const toneColor = tone >= 0 ? d3.interpolateRgb("#58a6ff", "#f85149")(tone / 100) : "#58a6ff";
+            linkGradient.selectAll("stop")
+                .data([{ o: "0%", c: "#a371f7" }, { o: "100%", c: toneColor }])
+                .attr("stop-color", d => d.c);
+
+            // 4. Apply Syntactic Fragmentation (Dashed lines)
+            link.attr("stroke-dasharray", syntax > 0 ? `${10 - syntax}, ${syntax * 2}` : "none")
+                .attr("stroke-opacity", syntax > 7 ? 0.25 : 0.7);
+
+            // 5. Apply Resonance (Pulse Animation)
+            if (resonance > 70) {
+                node.filter(d => d.isCore).classed("resonating", true);
+                node.filter(d => d.isCore).select("circle").style("animation-duration", `${(100 - resonance) / 30}s`);
+            } else {
+                node.classed("resonating", false);
+            }
+
+            // ---------- Composite index + radar chart ----------
+            const norm = {
+                EWV: ewv,
+                Tone: (tone + 100) / 2,
+                Semantic: ((semantic - 20) / (150 - 20)) * 100,
+                Syntax: (syntax / 10) * 100,
+                Resonance: resonance
+            };
+            const values = axes.map(a => norm[a]);
+            const composite = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+
+            const radarPts = values.map((v, i) => axisPoint(i, Math.max(0.02, v / 100)));
+            radarShape.attr("points", radarPts.map(p => p.join(",")).join(" "));
+            radarVertices.attr("cx", (d, i) => radarPts[i][0]).attr("cy", (d, i) => radarPts[i][1]);
+
+            const compositeColor = heatColor(composite);
+            radarShape.attr("fill", compositeColor).attr("stroke", compositeColor);
+            radarVertices.attr("fill", compositeColor);
+
+            const scoreEl = document.getElementById("radar-score");
+            scoreEl.innerText = composite;
+            scoreEl.style.color = compositeColor;
+            scoreEl.classList.toggle("hot", composite > 70);
+
+            // ---------- HUD strip ----------
+            document.getElementById("hud-composite").innerText = composite;
+            document.getElementById("hud-composite").style.color = compositeColor;
+
+            const dominantIdx = values.indexOf(Math.max(...values));
+            document.getElementById("hud-dominant").innerText = axes[dominantIdx];
+
+            const stateEl = document.getElementById("hud-state");
+            if (composite > 75) { stateEl.innerText = "CRITICAL"; stateEl.style.color = "#f85149"; }
+            else if (composite > 45) { stateEl.innerText = "ELEVATED"; stateEl.style.color = "#d29922"; }
+            else { stateEl.innerText = "STABLE"; stateEl.style.color = "#58a6ff"; }
+        }
+
+        // Attach Listeners
+        document.querySelectorAll("input[type=range]").forEach(input => {
+            input.addEventListener("input", updatePhysics);
+        });
+
+        // Drag functions for physics simulation
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+        }
+        function dragged(event, d) {
+            d.fx = event.x; d.fy = event.y;
+        }
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+        }
+
+        // Init
+        updatePhysics();
+    </script>
+</body>
+</html>
